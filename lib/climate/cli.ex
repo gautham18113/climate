@@ -7,9 +7,9 @@ defmodule Climate.Cli do
 
   @moduledoc """
   The CLI interface to interact with https://w1.weather.gov/ to fetch climate related
-  information in specific airport locations.
+  information in specific airport airport_codes.
 
-  The CLI allows to pass in a location which is an airport code like KDNA and
+  The CLI allows to pass in a airport_code which is an airport code like KDNA and
   a table summarizing the information extracted will be printed.
   """
 
@@ -26,8 +26,17 @@ defmodule Climate.Cli do
 
   defp cli_parser(argv) do
     OptionParser.parse(argv,
-      switches: [help: :boolean, list_locations:  :boolean, location: :string],
-      aliases:  [h:       :help, ls:       :list_locations, l:      :location]
+      switches: [
+        help:                 :boolean,
+        list_airport_codes:   :boolean,
+        search_airport_codes: :string,
+        airport_code:         :string,
+      ],
+      aliases: [
+        h:      :help,
+        lsc:    :list_airport_codes,
+        search: :search_airport_codes,
+        c:      :airport_code]
     )
     |> options_handler()
   end
@@ -38,12 +47,12 @@ defmodule Climate.Cli do
     "The commands don't look right, please use --help to get the correct usage"
   end
 
-  defp entry_point({:ok, location}) do
-    location
+  defp entry_point({:ok, airport_code}) do
+    airport_code
     |> Fetch.fetch()
     |> Parse.parse_xml()
     |> Transform.transform()
-    |> Map.take([:weather, :temperature_string, :location])
+    |> Map.take([:weather, :temperature_string, :airport_code])
     |> PrettyPrint.pprint()
   end
 
@@ -51,7 +60,7 @@ defmodule Climate.Cli do
     {:ok, :help}
   end
 
-  defp options_handler({[location: loc], [], []}) do
+  defp options_handler({[airport_code: loc], [], []}) do
     {:ok, loc}
   end
 

@@ -1,6 +1,6 @@
 # Climate
 
-**TODO: Add description**
+A CLI utility that fetches climate conditions at a given airport location.
 
 ## Installation
 
