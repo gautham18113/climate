@@ -1,0 +1,26 @@
+@startuml
+
+digraph climate {
+    node[shape=box];
+    start[shape=circle, style=filled,color="green", ];
+    start -> fetch_from_noaa [label="request"];
+    fetch_from_noaa -> parse_xml;
+    parse_xml -> convert_to_map;
+    convert_to_map -> transform_to_table_structure;
+    transform_to_table_structure -> pretty_print;
+
+    rankdir=LR;
+    cli -> parse [weight=bold, label="climate\n --location [a, [, b]]"]
+    parse -> generate_url[label="
+    {
+        location: [a, b]
+    }
+    "];
+
+    
+    node[shape=circle, style=filled, color="green"]
+    generate_url -> start_a;
+    generate_url -> start_b;
+}
+
+@enduml
