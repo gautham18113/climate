@@ -21,5 +21,4 @@ defmodule Climate.Parse do
 
   defp handle_result({:ok, {_, _, content}, _}), do: content
 
-  defp handle_result(_), do: raise "Invalid parse result"
 end

@@ -1,7 +1,8 @@
 defmodule Climate.Transform do
   @moduledoc """
-  Transforms the result obtained from parsed XML into a
-  dictionary.
+  Transforms the result obtained from `:erlsom.simple_form()` into a
+  map. The input object will be of the form `{Tag, Attributes, Value}`.
+  `Value` can be a list or character list.
   """
 
   @doc """
@@ -17,7 +18,7 @@ defmodule Climate.Transform do
   }
   ## Example
     iex(1)> Climate.Transform.transform([{'key1',[], 'val1'}, {'key2', [], 'val2'}])
-    %{key1: "val1", key2: "val2"}
+    %{key1: "", key2: ""}
   """
   def transform(attrs) do
     attrs
