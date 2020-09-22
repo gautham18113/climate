@@ -28,20 +28,26 @@ defmodule Climate.Cli do
     OptionParser.parse(argv,
       switches: [
         help:                 :boolean,
-        list_airport_codes:   :boolean,
-        search_airport_codes: :string,
         airport_code:         :string,
       ],
       aliases: [
-        h:      :help,
-        lsc:    :list_airport_codes,
-        search: :search_airport_codes,
-        c:      :airport_code]
+        h:                    :help,
+        c:                    :airport_code
+      ]
     )
     |> options_handler()
   end
 
   defp entry_point({:ok, :help}), do: :help
+
+  defp entry_point({:ok, :help, :airport_code}) do
+    IO.puts "
+    Accepts an airport code for which climate details
+    need to be fetched.
+      Usage: climate --airport-code <airport code>
+      Ex   : climate --airport-code KDAL
+    "
+  end
 
   defp entry_point({:error, :invalid}) do
     "The commands don't look right, please use --help to get the correct usage"
@@ -52,18 +58,18 @@ defmodule Climate.Cli do
     |> Fetch.fetch()
     |> Parse.parse_xml()
     |> Transform.transform()
-    |> Map.take([:weather, :temperature_string, :airport_code])
     |> PrettyPrint.pprint()
   end
 
   defp options_handler({[help: true], [], []}) do
     {:ok, :help}
   end
-
+  defp options_handler({[help: true], [], [{"--airport-code", nil}]}) do
+    {:ok, :help, :airport_code}
+  end
   defp options_handler({[airport_code: loc], [], []}) do
     {:ok, loc}
   end
-
   defp options_handler(_) do
     {:error, :invalid}
   end
